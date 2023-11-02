@@ -14,7 +14,7 @@ router.post('/todo', (req, res) => {
             return res.status(500).json({ error: 'Note is error' });
         }
 
-        res.status(201).json({ message: 'Note succesfully created', note });
+        res.status(201).json({ message: 'Note successfully created', note });
     });
 });
 
