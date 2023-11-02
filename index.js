@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const pool = require('./config/connection.js');
-const port = 8000;
+const port = 3000;
 const routerTodo = require('./models/todo.js')
 
 app.use(express.json());
