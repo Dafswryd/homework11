@@ -16,7 +16,7 @@ services:
     image: postgres
     container_name: postgres
     env_file:
-      - /postgres-env.list
+      - ./postgres-env.list
     volumes:
      - postgresvolume:/var/lib/postgresql/data
     ports:
@@ -27,7 +27,7 @@ services:
     image: dpage/pgadmin4
     container_name: pgadmin4
     env_file:
-      - /pgadmin-env.list
+      - ./pgadmin-env.list
     volumes:
      - pgadminvolume:/var/lib/pgadmin
     ports:
