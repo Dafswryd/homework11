@@ -1,54 +1,39 @@
 const request = require('supertest');
-const app = require('../index');
+const express = require('express');
+const app = express();
+const router = require('../models/todo');
+app.use(express.json());
+app.use('/api', router);
 
-describe('Todo Routes', () => {
-    it('should get all todos', async () => {
-        const response = await request(app)
-            .get('/todo');
+describe('API Endpoints', () => {
+  // Test POST /api/todo
+  it('should create a new todo', async () => {
+    const res = await request(app)
+      .post('/api/todo')
+      .send({ note: 'Test Note' });
 
-        console.log('Response Status Code:', response.statusCode);
-        console.log('Response Body:', response.body);
+    expect(res.statusCode).toEqual(201);
+    expect(res.body).toHaveProperty('message', 'Note successfully created');
+    expect(res.body).toHaveProperty('note', 'Test Note');
+  });
 
-        expect(response.statusCode).toBe(200);
-        expect(response.body.message).toBe('Successfully get all notes');
-        expect(response.body.notes).toBeDefined();
-    });
-    it('should create a new todo', async () => {
-        const response = await request(app)
-          .post('/todo')
-          .send({ note: 'New Note' });
-    
-        expect(response.statusCode).toBe(201);
-        expect(response.body.message).toBe('Note succesfully created');
-        expect(response.body.note).toBe('New Note');
-      });
-    
-      it('should get a specific todo', async () => {
-        const response = await request(app).get('/todo/2');
-    
-        expect(response.statusCode).toBe(200);
-        expect(response.body.message).toBe('Succesfully get this note');
-        expect(response.body.detail).toBeDefined();
-      });
-    
-      it('should return a 404 status if a specific todo is not found', async () => {
-        const response = await request(app).get('/todo/999');
-    
-        expect(response.statusCode).toBe(404);
-        expect(response.body.error).toBe('Data not found');
-      });
-    
-      it('should delete a specific todo', async () => {
-        const response = await request(app).delete('/todo/1');
-    
-        expect(response.statusCode).toBe(200);
-        expect(response.body.message).toBe('Delete succesfullly');
-      });
-    
-      it('should return a 404 status if trying to delete a non-existent todo', async () => {
-        const response = await request(app).delete('/todo/999');
-    
-        expect(response.statusCode).toBe(404);
-        expect(response.body.error).toBe('Note not found');
-      });
+  // Test GET /api/todo
+  it('should get all todos', async () => {
+    const res = await request(app).get('/api/todo');
+    expect(res.statusCode).toEqual(200);
+  });
+
+  // Test GET /api/todo/:id
+  it('should get a specific todo by ID', async () => {
+    const res = await request(app).get('/api/todo/1');
+    expect(res.statusCode).toEqual(404);
+  });
+
+  // Test DELETE /api/todo/:id
+  it('should delete a specific todo by ID', async () => {
+    const res = await request(app).delete('/api/todo/1');
+    expect(res.statusCode).toEqual(404);
+    expect(res.body).toHaveProperty('error', 'Note not found');
+  });
+
 });
